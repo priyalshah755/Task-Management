@@ -1,0 +1,11 @@
+const modal=document.getElementById("taskModal"),form=document.getElementById("taskForm");
+const titleInput=document.getElementById("taskTitle"),descriptionInput=document.getElementById("taskDescription"),priorityInput=document.getElementById("taskPriority"),statusInput=document.getElementById("taskStatus"),dueInput=document.getElementById("taskDueDate"),modalTitle=document.getElementById("modalTitle"),saveButton=document.getElementById("saveTaskBtn"),statusField=document.getElementById("statusField");
+function openModal(){modal.classList.add("visible");modal.setAttribute("aria-hidden","false");setTimeout(()=>titleInput.focus(),80)}
+function closeModal(){modal.classList.remove("visible");modal.setAttribute("aria-hidden","true")}
+function resetForCreate(){form.reset();form.action="/tasks";modalTitle.textContent="Create a new task";saveButton.innerHTML='Create task <span>→</span>';statusField.hidden=true;priorityInput.value="Medium";openModal()}
+document.getElementById("openTaskForm").addEventListener("click",resetForCreate);
+const emptyAdd=document.getElementById("emptyAddTask");if(emptyAdd)emptyAdd.addEventListener("click",resetForCreate);
+document.getElementById("closeModal").addEventListener("click",closeModal);document.getElementById("cancelModal").addEventListener("click",closeModal);
+modal.addEventListener("click",e=>{if(e.target===modal)closeModal()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+document.querySelectorAll(".edit-btn").forEach(button=>button.addEventListener("click",()=>{form.action=`/tasks/${button.dataset.id}/update`;titleInput.value=button.dataset.title||"";descriptionInput.value=button.dataset.description||"";priorityInput.value=button.dataset.priority||"Medium";statusInput.value=button.dataset.status||"Pending";dueInput.value=button.dataset.due||"";modalTitle.textContent="Edit task";saveButton.innerHTML='Save changes <span>→</span>';statusField.hidden=false;openModal()}));
+const todayLabel=document.getElementById("todayLabel");if(todayLabel)todayLabel.textContent=new Intl.DateTimeFormat("en-IN",{weekday:"short",day:"numeric",month:"short",year:"numeric"}).format(new Date());
